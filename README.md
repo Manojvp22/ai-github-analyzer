@@ -78,7 +78,7 @@ Dashboard Output
 Clone the repository:
 
 ```
-git clone https://github.com/yourusername/ai-github-analyzer.git
+git clone https://github.com/Manojvp22/ai-github-analyzer.git
 ```
 
 Navigate into the project folder:
