@@ -1,7 +1,7 @@
 import os
-from google import genai
+from groq import Groq
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
 def analyze_repository(repo):
@@ -23,9 +23,11 @@ def analyze_repository(repo):
     4. LinkedIn post about this project
     """
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt
+    response = client.chat.completions.create(
+        model="llama3-8b-8192",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
 
-    return response.text
+    return response.choices[0].message.content
