@@ -2,7 +2,8 @@
 <html>
 
 <head>
-<title>AI GitHub Analyzer</title>
+
+<title>AI GitHub Repository Analyzer</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -12,42 +13,46 @@
 
 <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
 
-<!-- Header -->
 
-<div class="flex items-center justify-between mb-8">
+<!-- ================================= -->
+<!-- HERO SECTION / PROJECT HEADLINE -->
+<!-- ================================= -->
 
-<h1 class="text-3xl font-bold text-gray-800">
-🚀 AI GitHub Analyzer
+<div class="text-center mb-10">
+
+<h1 class="text-4xl font-bold text-gray-800">
+🚀 AI GitHub Repository Analyzer
 </h1>
 
-<span class="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm">
-AI Developer Tool
-</span>
+<p class="text-gray-500 mt-3">
+Analyze any GitHub repository and generate AI-powered insights, improvements, and LinkedIn-ready summaries.
+</p>
 
 </div>
 
 
 
-<!-- Search Form -->
+<!-- ================================= -->
+<!-- REPOSITORY INPUT FORM -->
+<!-- ================================= -->
 
-<form method="POST" class="flex gap-4 mb-8">
+<form method="POST" class="flex gap-4 mb-10">
 
 {% csrf_token %}
 
 <input
 type="text"
 name="repo_url"
-placeholder="Enter GitHub Repository URL"
+placeholder="Paste GitHub Repository URL"
 class="flex-1 border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400"
 />
 
 <button
 id="analyzeBtn"
 type="submit"
-class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
->
+class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">
 
-<span id="btnText">Analyze</span>
+<span id="btnText">Analyze Repository</span>
 
 <span
 id="loadingSpinner"
@@ -62,9 +67,11 @@ class="hidden animate-spin border-2 border-white border-t-transparent rounded-fu
 
 {% if result %}
 
-<!-- GitHub Repo Preview -->
+<!-- ================================= -->
+<!-- GITHUB REPOSITORY PREVIEW CARD -->
+<!-- ================================= -->
 
-<div class="mb-6 bg-white p-6 rounded-xl shadow flex items-center gap-4">
+<div class="mb-8 bg-white p-6 rounded-xl shadow flex items-center gap-4">
 
 <img
 src="{{ result.avatar }}"
@@ -86,21 +93,26 @@ class="w-14 h-14 rounded-full shadow"
 <a
 href="{{ result.repo_url }}"
 target="_blank"
-class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-black transition"
->
-View Repo
+class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-black transition">
+
+View Repository
+
 </a>
 
 </div>
 
 
 
-<!-- Split Dashboard -->
+<!-- ================================= -->
+<!-- MAIN DASHBOARD GRID -->
+<!-- ================================= -->
 
 <div class="grid grid-cols-2 gap-6">
 
 
-<!-- LEFT PANEL -->
+<!-- ================================= -->
+<!-- LEFT PANEL : REPOSITORY DETAILS -->
+<!-- ================================= -->
 
 <div class="bg-gray-50 p-6 rounded-xl shadow">
 
@@ -108,7 +120,9 @@ View Repo
 Repository Details
 </h2>
 
+
 <div class="space-y-4">
+
 
 <div class="bg-white p-4 rounded-lg shadow">
 
@@ -120,7 +134,7 @@ Repository Details
 
 <div class="bg-white p-4 rounded-lg shadow">
 
-<p class="text-gray-500 text-sm">Language</p>
+<p class="text-gray-500 text-sm">Primary Language</p>
 <p class="font-semibold text-lg">{{ result.language }}</p>
 
 </div>
@@ -141,11 +155,13 @@ Repository Details
 
 </div>
 
+
 </div>
 
 
-
-<!-- Tech Stack -->
+<!-- ================================= -->
+<!-- TECH BADGES -->
+<!-- ================================= -->
 
 <div class="mt-6 flex gap-2 flex-wrap">
 
@@ -171,31 +187,59 @@ AI Analysis
 
 
 
-<!-- RIGHT PANEL -->
+<!-- ================================= -->
+<!-- RIGHT PANEL : AI ANALYSIS -->
+<!-- ================================= -->
 
 <div class="bg-indigo-50 p-6 rounded-xl shadow">
 
 <h2 class="text-lg font-bold text-indigo-700 mb-4">
-🤖 AI Analysis
+🤖 AI Project Analysis
 </h2>
 
 
 {% if ai_output %}
 
-<div class="bg-white p-4 rounded-lg shadow">
+<!-- AI RESULT CARD -->
 
-<p class="text-gray-700 whitespace-pre-line">
+<div id="aiOutput"
+class="bg-white p-5 rounded-lg shadow text-gray-700 whitespace-pre-line leading-relaxed">
+
 {{ ai_output }}
-</p>
 
 </div>
 
+
+<!-- COPY BUTTON -->
+
+<button
+onclick="copyPost()"
+class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+
+📋 Copy LinkedIn Post
+
+</button>
+
+
+<!-- ANALYZE AGAIN BUTTON -->
+
+<button
+onclick="window.location.href='/'"
+class="mt-3 ml-2 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
+
+Analyze Another Repo
+
+</button>
+
+
 {% else %}
+
+<!-- DEFAULT INFO BEFORE ANALYSIS -->
 
 <div class="bg-white p-4 rounded-lg shadow">
 
 <p class="text-gray-500">
-AI will analyze the repository and generate insights including:
+AI will analyze the repository and generate insights such as:
 </p>
 
 <ul class="mt-3 list-disc list-inside text-gray-600 space-y-1">
@@ -222,12 +266,14 @@ AI will analyze the repository and generate insights including:
 
 
 
+<!-- ================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================= -->
+
 <script>
 
 const form = document.querySelector("form");
-
 const btnText = document.getElementById("btnText");
-
 const spinner = document.getElementById("loadingSpinner");
 
 form.addEventListener("submit", () => {
@@ -236,6 +282,17 @@ btnText.innerText = "Analyzing...";
 spinner.classList.remove("hidden");
 
 });
+
+
+function copyPost() {
+
+const text = document.getElementById("aiOutput").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("LinkedIn post copied!");
+
+}
 
 </script>
 

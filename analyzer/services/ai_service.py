@@ -1,7 +1,7 @@
 import os
-from openai import OpenAI
+from google import genai
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 def analyze_repository(repo):
@@ -13,16 +13,19 @@ def analyze_repository(repo):
     Description: {repo['description']}
     Language: {repo['language']}
 
+    README CONTENT:
+    {repo['readme']}
+
     Provide:
-    1. Short project summary
+    1. Project summary
     2. Technologies used
     3. Possible improvements
-    4. LinkedIn post about the project
+    4. LinkedIn post about this project
     """
 
-    response = client.responses.create(
-        model="gpt-4.1",
-        input=prompt
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt
     )
 
-    return response.output_text
+    return response.text
